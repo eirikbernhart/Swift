@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A98DDD21FDF3AC6007B557B /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98DDD11FDF3AC6007B557B /* DashboardViewController.swift */; };
+		3A26FF921FE192EA0002796A /* PortofolioTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A26FF911FE192EA0002796A /* PortofolioTableViewController.swift */; };
+		3A26FF961FE1D6280002796A /* PortofolioTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A26FF951FE1D6280002796A /* PortofolioTableViewCell.swift */; };
+		3A98DDD21FDF3AC6007B557B /* DashboardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98DDD11FDF3AC6007B557B /* DashboardTableViewController.swift */; };
 		3A98DDD41FDF3B62007B557B /* CryptoCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98DDD31FDF3B62007B557B /* CryptoCurrency.swift */; };
 		3A98DDDA1FE01DD7007B557B /* CryptoCurrencyDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98DDD91FE01DD7007B557B /* CryptoCurrencyDetailTableViewController.swift */; };
 		3A98DDDE1FE0206A007B557B /* CryptoCurrencyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98DDDD1FE0206A007B557B /* CryptoCurrencyDetails.swift */; };
@@ -35,7 +37,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3A98DDD11FDF3AC6007B557B /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
+		3A26FF911FE192EA0002796A /* PortofolioTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortofolioTableViewController.swift; sourceTree = "<group>"; };
+		3A26FF951FE1D6280002796A /* PortofolioTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortofolioTableViewCell.swift; sourceTree = "<group>"; };
+		3A98DDD11FDF3AC6007B557B /* DashboardTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTableViewController.swift; sourceTree = "<group>"; };
 		3A98DDD31FDF3B62007B557B /* CryptoCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoCurrency.swift; sourceTree = "<group>"; };
 		3A98DDD91FE01DD7007B557B /* CryptoCurrencyDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoCurrencyDetailTableViewController.swift; sourceTree = "<group>"; };
 		3A98DDDD1FE0206A007B557B /* CryptoCurrencyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoCurrencyDetails.swift; sourceTree = "<group>"; };
@@ -100,11 +104,13 @@
 				3AB30CBC1FDEC7D100830EAC /* AppDelegate.swift */,
 				3A98DDDF1FE07548007B557B /* PersistenceService.swift */,
 				3AB30CBE1FDEC7D100830EAC /* ViewController.swift */,
-				3A98DDD11FDF3AC6007B557B /* DashboardViewController.swift */,
+				3A98DDD11FDF3AC6007B557B /* DashboardTableViewController.swift */,
 				3AB30CE11FDED8D600830EAC /* DashboardTableViewCell.swift */,
 				3A98DDD91FE01DD7007B557B /* CryptoCurrencyDetailTableViewController.swift */,
 				3A98DDD31FDF3B62007B557B /* CryptoCurrency.swift */,
 				3A98DDDD1FE0206A007B557B /* CryptoCurrencyDetails.swift */,
+				3A26FF911FE192EA0002796A /* PortofolioTableViewController.swift */,
+				3A26FF951FE1D6280002796A /* PortofolioTableViewCell.swift */,
 				3AB30CC01FDEC7D100830EAC /* Main.storyboard */,
 				3AB30CC61FDEC7D100830EAC /* Assets.xcassets */,
 				3AB30CC81FDEC7D100830EAC /* LaunchScreen.storyboard */,
@@ -226,12 +232,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A98DDD21FDF3AC6007B557B /* DashboardViewController.swift in Sources */,
+				3A98DDD21FDF3AC6007B557B /* DashboardTableViewController.swift in Sources */,
 				3A98DDD41FDF3B62007B557B /* CryptoCurrency.swift in Sources */,
+				3A26FF921FE192EA0002796A /* PortofolioTableViewController.swift in Sources */,
 				3AB30CC51FDEC7D100830EAC /* CryptoBase.xcdatamodeld in Sources */,
 				3AB30CBF1FDEC7D100830EAC /* ViewController.swift in Sources */,
 				3A98DDDE1FE0206A007B557B /* CryptoCurrencyDetails.swift in Sources */,
 				3A98DDE51FE08145007B557B /* Bank+CoreDataProperties.swift in Sources */,
+				3A26FF961FE1D6280002796A /* PortofolioTableViewCell.swift in Sources */,
 				3AB30CBD1FDEC7D100830EAC /* AppDelegate.swift in Sources */,
 				3A98DDDA1FE01DD7007B557B /* CryptoCurrencyDetailTableViewController.swift in Sources */,
 				3A98DDE31FE08145007B557B /* Bank+CoreDataClass.swift in Sources */,

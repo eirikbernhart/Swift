@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DashboardViewController: UITableViewController {
+class DashboardTableViewController: UITableViewController {
     
     final let url = URL(string: "https://api.coinmarketcap.com/v1/ticker/?convert=NOK&limit=10")
     private var cryptoCurrencies = [CryptoCurrency]()
@@ -63,7 +63,7 @@ class DashboardViewController: UITableViewController {
     
 }
 
-extension DashboardViewController {
+extension DashboardTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cryptoCurrencies.count

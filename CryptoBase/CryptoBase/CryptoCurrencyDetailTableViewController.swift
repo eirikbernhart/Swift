@@ -56,14 +56,6 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
         for(key, value) in data {
             formatData(key: key, str: value, dict: data)
         }
-        
-    
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     func formatData(key: UILabel, str: String, dict: [UILabel:String]) {
@@ -125,7 +117,7 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
         do {
             let result = try PersistenceService.context.fetch(fetchRequest)
             for data in result {
-                data.setValue(data.value(forKey: "\(self.bankInput)") as! Double + 5, forKey: "\(self.bankInput)")
+                data.setValue(data.value(forKey: "\(self.bankInput)") as! Double + sumFormatted, forKey: "\(self.bankInput)")
                 break
             }
         } catch {
@@ -142,6 +134,7 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
         
         
         getDataFromPersistentStorage()
+        tableView.reloadData()
         
     }
     
@@ -153,8 +146,8 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
             let result = try PersistenceService.context.fetch(fetchRequest)
             for data in result {
                 cryptoCurrencyAmount += data.value(forKey: "\(self.bankInput)") as! Double
-                print("Whats in db for :" + "\(self.bankInput)")
-                print(cryptoCurrencyAmount)
+                //print("Whats in db for :" + "\(self.bankInput)")
+                //print(cryptoCurrencyAmount)
             }
             self.valueInSelectedCryptoCurrency.text = String(cryptoCurrencyAmount)
         } catch {
@@ -169,6 +162,14 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
         
         return cryptoCurrencyAmount
         
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let count = super.tableView(tableView, numberOfRowsInSection: section)
+        if(getDataFromPersistentStorage() == 0) {
+            return count - 1
+        }
+        return count
     }
     
     
