@@ -19,6 +19,7 @@ class DashboardTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         downLoadJSON()
+        
 
 
         // Uncomment the following line to preserve selection between presentations
@@ -28,6 +29,7 @@ class DashboardTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
+
     func downLoadJSON() {
         guard let downloadUrl = url else { return }
         URLSession.shared.dataTask(with: downloadUrl) { (data, urlResponse, error) in

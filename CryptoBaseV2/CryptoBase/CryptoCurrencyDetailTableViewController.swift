@@ -79,7 +79,8 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
         let buyAction = UIAlertAction(title: "Confirm", style: .default, handler: {(action) in
             guard let sum = alert.textFields![0].text, let sumFormatted = Double(sum) else {return}
             
-            self.addDataToPersisentStorage(sumFormatted: sumFormatted)
+            self.addDataToPersisentStorage(sumFormatted: sumFormatted) //Original
+            //self.addDataFailVersion(sumFormatted: sumFormatted)
         })
         
         alert.addAction(cancelAction)
@@ -87,6 +88,9 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
         
         self.present(alert, animated: true, completion: nil)
     }
+    
+    
+    
     
     func addDataToPersisentStorage(sumFormatted: Double?) {
         
@@ -124,6 +128,8 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
             guard let price_nok = cryptoCurrency?.price_nok else { return }
             self.totalValueInNok = (Double(price_nok)! * amountOfCC)
             self.valueInSelectedCryptoCurrency.text = String(self.totalValueInNok)
+            //self.valueInSelectedCryptoCurrency.text = String(String(format: "%.1f", total))
+
             
             tableView.reloadData()
         } catch {
@@ -139,3 +145,110 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
         return count
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ 
+ 
+ 
+ func addDataFailVersion(sumFormatted: Double?) {
+ 
+ 
+ 
+ guard let symbol = self.cryptoCurrency?.symbol, let name = self.cryptoCurrency?.name,
+ let price_nok = self.cryptoCurrency?.price_nok, let amount = sumFormatted else {
+ return
+ }
+ 
+ 
+ let fetchRequest: NSFetchRequest<CryptoCurrencyCD> = CryptoCurrencyCD.fetchRequest()
+ 
+ do {
+ let result = try PersistenceService.context.fetch(fetchRequest)
+ 
+ 
+ if(result.count == 0) {
+ let context = CryptoCurrencyCD(context: PersistenceService.context)
+ print("EMPTY! MAKE NEW ENTRY!")
+ context.symbol = symbol
+ context.name = name
+ context.price_nok = price_nok
+ context.amount = String(amount)
+ context.tablePosition = 0
+ try PersistenceService.context.save()
+ }
+ 
+ if(result.count > 0){
+ print("NOT EMPTY! UPDATE EXSITING ENTRY!")
+ result[0].symbol = symbol
+ result[0].name = name
+ result[0].price_nok = price_nok
+ result[0].amount = String(amount)
+ result[0].tablePosition = 0
+ try PersistenceService.context.save()
+ }
+ 
+ } catch {
+ 
+ }
+ 
+ getDataFromPersistentStorageFail()
+ }
+ 
+ 
+ func getDataFromPersistentStorageFail() {
+ let fetchRequest: NSFetchRequest<CryptoCurrencyCD> = CryptoCurrencyCD.fetchRequest()
+ do {
+ let result = try PersistenceService.context.fetch(fetchRequest)
+ for data in result {
+ print("Data: \(data.name!)")
+ }
+ } catch {
+ 
+ }
+ }
+ 
+ */

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3A26FF921FE192EA0002796A /* PortofolioTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A26FF911FE192EA0002796A /* PortofolioTableViewController.swift */; };
 		3A26FF961FE1D6280002796A /* PortofolioTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A26FF951FE1D6280002796A /* PortofolioTableViewCell.swift */; };
+		3A32B7E71FE438CB005E342E /* FetchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A32B7E61FE438CB005E342E /* FetchData.swift */; };
 		3A393D091FE29B7800F8EF93 /* CryptoCurrencyCD+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A393D071FE29B7800F8EF93 /* CryptoCurrencyCD+CoreDataClass.swift */; };
 		3A393D0A1FE29B7800F8EF93 /* CryptoCurrencyCD+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A393D081FE29B7800F8EF93 /* CryptoCurrencyCD+CoreDataProperties.swift */; };
 		3A98DDD21FDF3AC6007B557B /* DashboardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A98DDD11FDF3AC6007B557B /* DashboardTableViewController.swift */; };
@@ -39,6 +40,7 @@
 /* Begin PBXFileReference section */
 		3A26FF911FE192EA0002796A /* PortofolioTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortofolioTableViewController.swift; sourceTree = "<group>"; };
 		3A26FF951FE1D6280002796A /* PortofolioTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortofolioTableViewCell.swift; sourceTree = "<group>"; };
+		3A32B7E61FE438CB005E342E /* FetchData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchData.swift; sourceTree = "<group>"; };
 		3A393D071FE29B7800F8EF93 /* CryptoCurrencyCD+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CryptoCurrencyCD+CoreDataClass.swift"; sourceTree = "<group>"; };
 		3A393D081FE29B7800F8EF93 /* CryptoCurrencyCD+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CryptoCurrencyCD+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3A98DDD11FDF3AC6007B557B /* DashboardTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTableViewController.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				3A98DDD31FDF3B62007B557B /* CryptoCurrency.swift */,
 				3A98DDDD1FE0206A007B557B /* CryptoCurrencyDetails.swift */,
 				3A26FF911FE192EA0002796A /* PortofolioTableViewController.swift */,
+				3A32B7E61FE438CB005E342E /* FetchData.swift */,
 				3A26FF951FE1D6280002796A /* PortofolioTableViewCell.swift */,
 				3AB30CC01FDEC7D100830EAC /* Main.storyboard */,
 				3AB30CC61FDEC7D100830EAC /* Assets.xcassets */,
@@ -240,6 +243,7 @@
 				3A393D0A1FE29B7800F8EF93 /* CryptoCurrencyCD+CoreDataProperties.swift in Sources */,
 				3AB30CBF1FDEC7D100830EAC /* ViewController.swift in Sources */,
 				3A98DDDE1FE0206A007B557B /* CryptoCurrencyDetails.swift in Sources */,
+				3A32B7E71FE438CB005E342E /* FetchData.swift in Sources */,
 				3A26FF961FE1D6280002796A /* PortofolioTableViewCell.swift in Sources */,
 				3AB30CBD1FDEC7D100830EAC /* AppDelegate.swift in Sources */,
 				3A98DDDA1FE01DD7007B557B /* CryptoCurrencyDetailTableViewController.swift in Sources */,

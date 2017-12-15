@@ -24,4 +24,5 @@ extension CryptoCurrencyCD {
     @NSManaged public var price_nok: String?
     @NSManaged public var price_usd: String?
 
+
 }
