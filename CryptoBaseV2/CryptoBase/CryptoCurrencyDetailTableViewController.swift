@@ -127,8 +127,9 @@ class CryptoCurrencyDetailTableViewController: UITableViewController {
             
             guard let price_nok = cryptoCurrency?.price_nok else { return }
             self.totalValueInNok = (Double(price_nok)! * amountOfCC)
-            self.valueInSelectedCryptoCurrency.text = String(self.totalValueInNok)
-            //self.valueInSelectedCryptoCurrency.text = String(String(format: "%.1f", total))
+            
+            
+            self.valueInSelectedCryptoCurrency.text = String(String(format: "%.1f", totalValueInNok))
 
             
             tableView.reloadData()

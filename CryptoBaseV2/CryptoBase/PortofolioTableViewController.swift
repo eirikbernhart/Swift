@@ -17,25 +17,22 @@ class PortofolioTableViewController: UITableViewController {
     final let url = URL(string: "https://api.coinmarketcap.com/v1/ticker/?convert=NOK&limit=10")
     
     private var cryptoCurrencies = [CryptoCurrency]()
-    var cryptoCurrenciesFromDB = [NSDictionary()]
-   
     
+    var cryptoCurrenciesFromDB = [NSDictionary()]
+    
+    var totalValueInNok: Double = 0
+   
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        downLoadJSON()
-
-
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         downLoadJSON()
         getDataFromPersistentStorage()
-        
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,6 +55,7 @@ class PortofolioTableViewController: UITableViewController {
                 let downloadedData = try decoder.decode([CryptoCurrency].self, from: data)
                 self.cryptoCurrencies = downloadedData
                 DispatchQueue.main.async {
+                    self.totalValueInNok = 0
                     self.tableView.reloadData()
                 }
             } catch {
@@ -66,14 +64,10 @@ class PortofolioTableViewController: UITableViewController {
             }.resume()
     }
     
-    
-    
-    
     func getDataFromPersistentStorage() {
         
         var expressionDescriptions = [AnyObject]()
         expressionDescriptions.append("symbol" as AnyObject)
-        
         
         let keyPath = NSExpression(forKeyPath: "amount")
         let expression = NSExpression(forFunction: "sum:", arguments: [keyPath])
@@ -81,7 +75,6 @@ class PortofolioTableViewController: UITableViewController {
         sumDescript.expression = expression
         sumDescript.name = "sum"
         sumDescript.expressionResultType = .integer64AttributeType
-        
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CryptoCurrencyCD")
         request.returnsObjectsAsFaults = false
@@ -95,12 +88,6 @@ class PortofolioTableViewController: UITableViewController {
             if let results = results as? [NSDictionary] {
                 self.cryptoCurrenciesFromDB = results
             }
-
-            
-            
-            
-            
-            
             
         } catch _ {
             
@@ -108,207 +95,97 @@ class PortofolioTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    
-    
-    
+    func addDataToPersisentStorage(sumFormatted: Double?, cryptoCurrency: String) {
+        self.totalValueInNok = 0
 
+        guard let amount = sumFormatted else {
+            return
+        }
+        
+        let cryptoCurrencyCD = CryptoCurrencyCD(context: PersistenceService.context)
+        
+        cryptoCurrencyCD.symbol = cryptoCurrency
+        cryptoCurrencyCD.amount = String(amount)
+        cryptoCurrencyCD.tablePosition = 0
+        
+        PersistenceService.saveContext()
+        getDataFromPersistentStorage()
+        tableView.reloadData()
+    }
 }
 
-
 extension PortofolioTableViewController {
+    
+
    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Total"
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.minimumFractionDigits = 2
+        let totalNokFormatted = formatter.string(from: totalValueInNok as NSNumber)
+        return "Total(NOK): \(totalNokFormatted!)"
     }
-    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cryptoCurrenciesFromDB.count
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "PortofolioCell", for: indexPath) as! PortofolioTableViewCell
-        cell.cryptoCurrencyLabel.text = String(describing: cryptoCurrenciesFromDB[indexPath.row]["symbol"]!)
+        let currentSymbol: String = String(describing: cryptoCurrenciesFromDB[indexPath.row]["symbol"]!)
+        cell.cryptoCurrencyLabel.text = currentSymbol
         cell.cryptoCurrencyAmountLabel.text = String(describing: cryptoCurrenciesFromDB[indexPath.row]["sum"]!)
         
-        
         if(cryptoCurrencies.count > 0) {
-            guard let valueInNok = cryptoCurrencies[indexPath.row].price_nok else {
-                return UITableViewCell()
+            
+
+            
+            var valueInNok: String = ""
+            
+            for data in self.cryptoCurrencies {
+                if(data.symbol! == currentSymbol) {
+                    valueInNok = data.price_nok!
+                }
             }
+            
             let cryptoAMount: Double = (cryptoCurrenciesFromDB[indexPath.row]["sum"] as? Double)!
             let total: Double = Double(valueInNok)! * cryptoAMount
-            let totalFormatted: String = String(format: "%.1f", total)
+            
+            self.totalValueInNok += total
+            
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.minimumFractionDigits = 2
+            let totalFormatted = formatter.string(from: total as NSNumber)
+            
             cell.cryptoCurrencyInNok.text = totalFormatted
         }
         
-        
-        
+
         
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let alert = UIAlertController(title: "Manage Cryptocurrency", message: nil, preferredStyle: .alert)
+        alert.addTextField(configurationHandler: { (textField) in
+            textField.placeholder = "amount."
+        })
+        let cancelAction = UIAlertAction(title: "Abort", style: .default)
+        
+        let updateAction = UIAlertAction(title: "Confirm", style: .default, handler: {(action) in
+            guard let sum = alert.textFields![0].text, let sumFormatted = Double(sum) else {return}
+            let currentSymbol: String = String(describing: self.cryptoCurrenciesFromDB[indexPath.row]["symbol"]!)
+            self.addDataToPersisentStorage(sumFormatted: sumFormatted, cryptoCurrency: currentSymbol)
+        })
+        
+        alert.addAction(cancelAction)
+        alert.addAction(updateAction)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
 }
-
-
-
-
-
-/* YET ANOTHER FAIL
- 
- 
- let fetchRequest: NSFetchRequest<CryptoCurrencyCD> = CryptoCurrencyCD.fetchRequest()
- let symbol = "BTC"
- fetchRequest.predicate = NSPredicate(format: "symbol == %@", symbol)
- fetchRequest.resultType = .dictionaryResultType
- let sumExpression = NSExpression(format: "sum(amount)")
- let sumED = NSExpressionDescription()
- sumED.expression = sumExpression
- sumED.name = "sumOfAmount"
- sumED.expressionResultType = .doubleAttributeType
- fetchRequest.propertiesToFetch = ["symbol"]
- let sort = NSSortDescriptor(key: "symbol", ascending: false)
- fetchRequest.sortDescriptors = [sort]
- 
- do {
- let results = try PersistenceService.context.fetch(fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
- 
- 
- } catch let error as NSError {
- print("Fetch failed: \(error.localizedDescription)")
- }
-
- 
- /*for data in self.cryptoCurrencies {
- print("Data fro db: \(data.symbol!)")
- self.cryptoCurrencies.filter()
- }*/
- //let countedSet = NSCountedSet(array: self.cryptoCurrencies.map{$0.amount})
- /*let countedSet = NSCountedSet(array: result)
- for value in countedSet.allObjects {
- print("Element: \(value), count:, \(countedSet.count(for: value))")
- }*/
- 
- //let counts = result.reduce(into: [:]) {counts, word in counts[word, default: 0] += 1}
- 
- 
- var arrays = [
- ["Product":"Item0", "Price":"15"],
- ["Product":"Item1", "Price":"53"],
- ["Product":"Item2", "Price":"12"],
- ["Product":"Item1", "Price":"83"],
- ["Product":"Item0", "Price":"10"],
- ["Product":"Item3", "Price":"88"],
- ["Product":"Item0", "Price":"44"]
- ]
- 
- var result = [String : Int]()
- 
- for product in arrays {
- 
- if let productKey = product["Product"] {
- let value = Int(product["Price"] ?? "0")
- if result[productKey] == nil, let value = value {
- result[productKey] = value
- } else if let value = value {
- result[productKey]! += value
- }
- }
- }
- 
- let newArray = result.map {["Product":$0, "Price": $1]}
- for data in newArray {
- print(data)
- }
- 
- 
- 
- 
- //V2
- 
- 
- var expressionDescriptions = [AnyObject]()
- expressionDescriptions.append("symbol" as AnyObject)
- 
- 
- let expressionDescription = NSExpressionDescription()
- expressionDescription.name = "amountCount"
- expressionDescription.expression = NSExpression(format: "@sum.amount")
- expressionDescription.expressionResultType = .stringAttributeType
- expressionDescriptions.append(expressionDescription)
- 
- let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CryptoCurrencyCD.fetchRequest()
- fetchRequest.propertiesToGroupBy = ["symbol"]
- fetchRequest.resultType = .dictionaryResultType
- 
- fetchRequest.sortDescriptors = [NSSortDescriptor(key: "symbol", ascending: true)]
- fetchRequest.propertiesToFetch = expressionDescriptions
- 
- var results:[[String:AnyObject]]?
- 
- 
- do {
- //let result = try PersistenceService.context.fetch(fetchRequest)
- //self.cryptoCurrencies = result
- results = try PersistenceService.context.fetch(fetchRequest) as? [[String:AnyObject]]
- 
- //print(results)
- 
- } catch _ {
- results = nil
- }
- //print(results)
- 
- }
- 
- func downloadJSON() {
- 
- }
- 
- 
- 
- }
- 
- 
- extension PortofolioTableViewController {
- 
- override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
- return "Total"
- }
- 
- 
- override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
- return 0
- }
- 
- 
- override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
- let cell = tableView.dequeueReusableCell(withIdentifier: "PortofolioCell", for: indexPath) as! PortofolioTableViewCell
- 
- 
- 
- return cell
- }
- }
- 
- 
- 
- 
- let arrCryptoVals = [
- "BTC",
- "ETH",
- "BCH",
- "LTC",
- "XRP",
- "MIOTA",
- "DASH",
- "XEM",
- "XMR",
- "BTG"
- ]
- 
- for saldoType in arrCryptoVals {
- getDataFromPersistentStorage()
- }
- 
- */
