@@ -115,6 +115,8 @@ class PortofolioTableViewController: UITableViewController {
     
     func addDataToPersisentStorage(sumFormatted: Double?, cryptoCurrency: String) {
         self.totalValueInNok = 0
+        
+        print("ADD-METHOD RAN!")
 
         guard let amount = sumFormatted else {
             return
@@ -128,60 +130,63 @@ class PortofolioTableViewController: UITableViewController {
         
         if let result = try? PersistenceService.context.fetch(fetchRequest) {
             
-            for data in result {
-                print("Data in result: \(data.name ?? "undfined")")
-                let matches = result.filter{ $0.symbol == cryptoCurrency }
-                let mapMatches = matches.map{($0.amount! as NSString).doubleValue}
-                amountOfCC = mapMatches.reduce(0) { $0 + $1}
-                print("Total value for \(String(describing: data.symbol)): \(amountOfCC)")
-                if(data.symbol == cryptoCurrency) {
-                    break
-                }
-            }
             
-        }
-        
-        
-        
-        
-        
-        
-        //DELETE 0 OR MINUS VALUES
-        if(amountOfCC - fabs(amount) <= 0) {
-            deleteFromPersistentStorage(symbol: cryptoCurrency)
-        } else {
-            do {
-                let result = try PersistenceService.context.fetch(fetchRequest)
                 for data in result {
-                    if(data.tablePosition > -1) {
-                        cryptoCurrencyCD.symbol = cryptoCurrency
-                        cryptoCurrencyCD.amount = String(amount)
-                        cryptoCurrencyCD.tablePosition = data.tablePosition
-                        PersistenceService.saveContext() //ORIGINAL
-                        getDataFromPersistentStorage()
-                        tableView.reloadData() //ORIGINAL
-                    } else {
-                        cryptoCurrencyCD.symbol = cryptoCurrency
-                        cryptoCurrencyCD.amount = String(amount)
-                        cryptoCurrencyCD.tablePosition = -1 //Experimental
-                        PersistenceService.saveContext() //ORIGINAL
-                        getDataFromPersistentStorage()
-                        tableView.reloadData() //ORIGINAL
+                    print("Data in result: \(data.name ?? "undefined")")
+                    let matches = result.filter{ $0.symbol == cryptoCurrency }
+                    let mapMatches = matches.map{($0.amount! as NSString).doubleValue}
+                    amountOfCC = mapMatches.reduce(0) { $0 + $1}
+                    print("Total value for \(String(describing: data.symbol)): \(amountOfCC)")
+                    if(data.symbol == cryptoCurrency) {
+                        break
                     }
                 }
-            } catch {
-                
+        }
+        
+        print("OLD AMOUNT: \(amountOfCC)")
+        print("NEW AMOUNT: \(amount)")
+        print("AMOUNT MINUS OLD AMOUNT: \(amountOfCC - fabs(amount))")
+
+        
+        
+        //DELETES EVERYTHING SO WE DONT "TRACK" NEGATIVE OR 0 VALUES
+       
+        print("STAGE.1")
+        if(amount < 1 && amountOfCC - fabs(amount) <= 0){
+            print("STAGE.2")
+            deleteFromPersistentStorage(symbol: cryptoCurrency)
+        } else {
+        
+        print("STAGE.3")
+        //THIS DOES THE INCREMENTIAL DELETION
+        do {
+            let result = try PersistenceService.context.fetch(fetchRequest)
+            for data in result {
+                if(data.tablePosition > -1) {
+                    cryptoCurrencyCD.symbol = cryptoCurrency
+                    cryptoCurrencyCD.amount = String(amount)
+                    cryptoCurrencyCD.tablePosition = data.tablePosition
+                    PersistenceService.saveContext() //ORIGINAL
+                    getDataFromPersistentStorage()
+                    tableView.reloadData() //ORIGINAL
+                } else {
+                    cryptoCurrencyCD.symbol = cryptoCurrency
+                    cryptoCurrencyCD.amount = String(amount)
+                    cryptoCurrencyCD.tablePosition = -1 //Experimental
+                    PersistenceService.saveContext() //ORIGINAL
+                    getDataFromPersistentStorage()
+                    tableView.reloadData() //ORIGINAL
+                }
             }
+        } catch {
             
-            //ORIGINAL BLOCK!
-            //cryptoCurrencyCD.symbol = cryptoCurrency
-            //cryptoCurrencyCD.amount = String(amount)
-            //cryptoCurrencyCD.tablePosition = 0 //ORIGINAL
-            //PersistenceService.saveContext() //ORIGINAL
-            //getDataFromPersistentStorage()
-            //tableView.reloadData() //ORIGINAL
         }
     }
+        
+
+    }
+        
+    
     
     func deleteFromPersistentStorage(symbol: String)  {
         print("Lets delete!")
@@ -342,3 +347,161 @@ extension PortofolioTableViewController {
         tableView.reloadData()
     }
 }
+
+
+
+
+
+
+
+/*
+ 
+ if(amountOfCC - fabs(amount) <= 0) {
+ deleteFromPersistentStorage(symbol: cryptoCurrency)
+ } else {
+ do {
+ let result = try PersistenceService.context.fetch(fetchRequest)
+ for data in result {
+ if(data.tablePosition > -1) {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = data.tablePosition
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ } else {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = -1 //Experimental
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ }
+ }
+ } catch {
+ 
+ }
+ }
+ 
+ */
+ 
+ 
+/*
+ 
+ 
+ 
+ //DELETE 0 OR MINUS VALUES
+ if(amount > 0) {
+ do {
+ let result = try PersistenceService.context.fetch(fetchRequest)
+ for data in result {
+ if(data.tablePosition > -1) {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = data.tablePosition
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ } else {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = -1 //Experimental
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ }
+ }
+ } catch {
+ 
+ }
+ } else {
+ deleteFromPersistentStorage(symbol: cryptoCurrency)
+ }
+ */
+
+
+
+/*
+ 
+ 
+ 
+ if(amount < 0) {
+ print("AMOUNT IS LESS THAN 0")
+ deleteFromPersistentStorage(symbol: cryptoCurrency)
+ }
+ if(amount > 0) {
+ print("DID I ACCIDENTLY GET HERE?!?!?!?!")
+ do {
+ let result = try PersistenceService.context.fetch(fetchRequest)
+ for data in result {
+ if(data.tablePosition > -1) {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = data.tablePosition
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ } else {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = -1 //Experimental
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ }
+ }
+ } catch {
+ 
+ }
+ }
+ 
+ 
+ */
+
+
+
+
+
+/*
+ 
+ 
+ 
+ 
+ do {
+ let result = try PersistenceService.context.fetch(fetchRequest)
+ 
+ if(result.count > 0 && amount < 0) {
+ print("AMOUNT IS LESS THAN 0")
+ deleteFromPersistentStorage(symbol: cryptoCurrency)
+ }
+ 
+ if(amount > 0) {
+ print("DID I ACCIDENTLY GET HERE?!?!?!?!")
+ for data in result {
+ print("AMOUNT OF RESULTS IN DB: \(result.count)")
+ if(data.tablePosition > -1) {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = data.tablePosition
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ } else {
+ cryptoCurrencyCD.symbol = cryptoCurrency
+ cryptoCurrencyCD.amount = String(amount)
+ cryptoCurrencyCD.tablePosition = -1 //Experimental
+ PersistenceService.saveContext() //ORIGINAL
+ getDataFromPersistentStorage()
+ tableView.reloadData() //ORIGINAL
+ }
+ }
+ }
+ } catch {
+ 
+ }
+ 
+ 
+ 
+ 
+ 
+ */
